@@ -1,0 +1,11 @@
+.container-fluid {
+    width: 95%;
+    height: auto;
+    position: relative;
+}
+
+#map {
+    height: 60rem;
+    width: 100%;
+}
+
