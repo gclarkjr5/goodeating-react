@@ -8,14 +8,15 @@ class Container extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            initialState: 'FL',
+            initialState: 'CA',
             states: null,
             newState: null,
             schools: null,
-            univs: null
+            univs: null,
+            rests: null
         }
         this.getNewState = this.getNewState.bind(this)
-        this.getUnivs = this.getUnivs.bind(this)
+        this.getData = this.getData.bind(this)
     }
 
     componentDidMount() {
@@ -30,16 +31,17 @@ class Container extends Component {
             .catch(err => {
                 console.log(err)
             })
-        this.getUnivs(this.state.initialState);
+        this.getData(this.state.initialState);
     }
 
-    getUnivs = val => {
+    getData = val => {
         const st = _.isObject(val) ? val.value : val
-        axios.post(`/api/univ`, { selected: st })
+        axios.post(`/api/yelp`, { selected: st })
             .then(res => {
                 this.setState(
                     {
-                        univs: res.data
+                        univs: res.data.uniData,
+                        rests: res.data.yelpData
                     }
                 )
             })
@@ -57,21 +59,23 @@ class Container extends Component {
     }
 
     render() {
-        const { states, newState, initialState, univs } = this.state
+        const { states, newState, initialState, univs, rests } = this.state
         const style = {
             width: '100vw',
-            height: '100vh'
+            height: '100vh',
+            position: 'relative'
         }
         return (
             <div>
                 <StateSelect
                     states={states}
                     initialState={initialState}
-                    getUnivs={this.getUnivs}
+                    getData={this.getData}
                     getNewState={this.getNewState}
                     newState={newState}
                 />
                 <Maps
+                    rests={rests}
                     univs={univs}
                     style={style}
                 />

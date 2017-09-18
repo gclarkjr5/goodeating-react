@@ -19,27 +19,7 @@ routes.route(`/states`)
         });
     })
 
-routes.route(`/univ`)
-    .post((req, res) => {
-        const state = req.body.selected
-        univ(state, x => {
-            res.status(200).json(x)
-        });
-    })
-
 routes.route(`/yelp`)
-    // .get((req, res) => {
-    //     const state = _.isUndefined(req.body.selected) ? `TX` : req.body.selected
-    //     yelp(state, x => {
-    //         res.status(200).json(x)
-    //     });
-    // })
-    // .post((req, res) => {
-    //     const state = req.body.selected
-    //     yelp(state, x => {
-    //         res.status(200).json(x)
-    //     });
-    // })
     .post((req, res) => {
         const state = req.body.selected;
         let data = {};
@@ -50,19 +30,6 @@ routes.route(`/yelp`)
                 res.status(200).json(data)
             });
         });
-    })
-
-// routes.route(`/getStateData`)
-//     .post((req, res) => {
-//         const state = req.body.selected;
-//         let data = {};
-//         univ(state, x => {
-//             data.uniData = x;
-//             yelp(state, y => {
-//                 data.yelpData = y
-//                 res.status(200).json(data)
-//             });
-//         });
-//     })
+    });
 
 module.exports = routes;
