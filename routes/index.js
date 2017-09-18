@@ -20,22 +20,26 @@ routes.route(`/states`)
     })
 
 routes.route(`/univ`)
-    .get((req, res) => {
-        const state = `TX`
+    .post((req, res) => {
+        const state = req.body.selected
         univ(state, x => {
             res.status(200).json(x)
         });
     })
 
 routes.route(`/yelp`)
-    .get((req, res) => {
-        const state = _.isUndefined(req.body.selected) ? `TX` : req.body.selected
-        yelp(state, x => {
-            res.status(200).json(x)
-        });
-    });
-
-routes.route(`/getStateData`)
+    // .get((req, res) => {
+    //     const state = _.isUndefined(req.body.selected) ? `TX` : req.body.selected
+    //     yelp(state, x => {
+    //         res.status(200).json(x)
+    //     });
+    // })
+    // .post((req, res) => {
+    //     const state = req.body.selected
+    //     yelp(state, x => {
+    //         res.status(200).json(x)
+    //     });
+    // })
     .post((req, res) => {
         const state = req.body.selected;
         let data = {};
@@ -47,5 +51,18 @@ routes.route(`/getStateData`)
             });
         });
     })
+
+// routes.route(`/getStateData`)
+//     .post((req, res) => {
+//         const state = req.body.selected;
+//         let data = {};
+//         univ(state, x => {
+//             data.uniData = x;
+//             yelp(state, y => {
+//                 data.yelpData = y
+//                 res.status(200).json(data)
+//             });
+//         });
+//     })
 
 module.exports = routes;

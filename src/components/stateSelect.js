@@ -14,9 +14,10 @@ class StateSelect extends Component {
 
         const valueChange = v => {
             this.props.getNewState(v)
+            this.props.getUnivs(v)
         }
 
-        let val = _.isNull(this.props.newState) ? `TX` : this.props.newState.value
+        let val = _.isNull(this.props.newState) ? this.props.initialState : this.props.newState.value
 
         return (
             <Select
