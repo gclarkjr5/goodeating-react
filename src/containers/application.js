@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import StateSelect from '../components/stateSelect';
-import Maps from '../components/googlemaps';
+import Maps from '../components/gmaps';
 import axios from 'axios';
+import { GoogleApiWrapper } from 'google-maps-react';
 
-class Application extends Component {
+export class Container extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -37,6 +38,14 @@ class Application extends Component {
 
     render() {
         const { states, newState } = this.state
+
+        if (!this.props.loaded) {
+            return <div>Loading...</div>
+        }
+        const style = {
+            width: '100vw',
+            height: '100vh'
+        }
         return (
             <div>
                 <StateSelect
@@ -44,10 +53,18 @@ class Application extends Component {
                     getNewState={this.getNewState}
                     newState={newState}
                 />
-                <Maps />
+                <div style={style}>
+                    <Maps
+                        google={this.props.google}
+                    />
+                </div>
             </div>
         )
     }
 }
 
-export default Application;
+export default GoogleApiWrapper({
+    apiKey: ("AIzaSyAG9Ic0JYMUcE2h69XmBSbnzaWWw3vD12U"),
+    version: '3'
+})(Container)
+
