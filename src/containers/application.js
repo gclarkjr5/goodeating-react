@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import StateSelect from '../components/stateSelect';
 import Maps from '../components/gmaps';
+// import WithHeatMap from '../components/heatmap';
 import axios from 'axios';
 import _ from 'lodash';
 
@@ -34,14 +35,36 @@ class Container extends Component {
         this.getData(this.state.initialState);
     }
 
+    // shouldComponentUpdate(prevState, nextState) {
+    //     // axios.get(`/api/states`)
+    //     //     .then(res => {
+    //     //         this.setState(
+    //     //             {
+    //     //                 states: res.data
+    //     //             }
+    //     //         )
+    //     //     })
+    //     //     .catch(err => {
+    //     //         console.log(err)
+    //     //     })
+    //     // this.getData(this.state.initialState);
+    //     // return false;
+    // }
+
     getData = val => {
         const st = _.isObject(val) ? val.value : val
         axios.post(`/api/yelp`, { selected: st })
             .then(res => {
+                const pos = _.map(res.data.yelpData, x => {
+                    return {
+                        lat: _.round(x.lat, 6),
+                        lng: _.round(x.lng, 6)
+                    }
+                });
                 this.setState(
                     {
                         univs: res.data.uniData,
-                        rests: res.data.yelpData
+                        rests: pos
                     }
                 )
             })
