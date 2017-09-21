@@ -8,7 +8,6 @@ export class Maps extends Component {
             return <div>Loading...</div>
         }
         const { univs, rests } = this.props;
-        const pos = _.isNull(rests) ? [] : rests
         const markers = _.isNull(univs) ? [] : _.map(univs, (x, i) =>
             <Marker
                 key={i}
@@ -16,21 +15,47 @@ export class Maps extends Component {
                 position={{ lat: x['location.lat'], lng: x['location.lon'] }}
             />
         );
+        const pos = _.isNull(rests) ?
+            <Map
+                google={this.props.google}
+                zoom={5}
+            >
+                {markers}
+            </Map>
+            :
+            <Map
+                google={this.props.google}
+                zoom={5}
+            >
+                <HeatMap
+                    positions={rests}
+                />
+                {markers}
+            </Map>
 
-        if (pos.length > 0) {
-            return (
-                <Map
-                    google={this.props.google}
-                    zoom={5}
-                >
-                    <HeatMap
-                        positions={pos}
-                    />
-                    {markers}
+        return (
+            <div>
+                {pos}
+            </div>
+        )
 
-                </Map>
-            )
-        }
+
+
+
+        // if (pos.length > 0) {
+        //     return (
+        //         <Map
+        //             google={this.props.google}
+        //             zoom={5}
+        //         >
+        //             <HeatMap
+        //                 positions={pos}
+        //             />
+        //             {markers}
+
+        //         </Map>
+        //     )
+        // }
     }
 }
 
