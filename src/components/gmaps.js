@@ -17,18 +17,20 @@ export class Maps extends Component {
             />
         );
 
-        return (
-            <Map
-                google={this.props.google}
-                zoom={5}
-            >
-                <HeatMap
-                    positions={pos}
-                />
-                {markers}
+        if (pos.length > 0) {
+            return (
+                <Map
+                    google={this.props.google}
+                    zoom={5}
+                >
+                    <HeatMap
+                        positions={pos}
+                    />
+                    {markers}
 
-            </Map>
-        )
+                </Map>
+            )
+        }
     }
 }
 

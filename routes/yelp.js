@@ -18,7 +18,7 @@ module.exports = (state, callback) => {
                     longitude: lon,
                     // location: `${zip}`,
                     categories: "food",
-                    limit: 2
+                    limit: 30
                 }).then(response => {
                     let filt = _.filter(response.jsonBody.businesses, x => {
                         return x.rating >= 3

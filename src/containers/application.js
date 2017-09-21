@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import StateSelect from '../components/stateSelect';
 import Maps from '../components/gmaps';
-// import WithHeatMap from '../components/heatmap';
 import axios from 'axios';
 import _ from 'lodash';
 
@@ -12,15 +11,22 @@ class Container extends Component {
             initialState: 'CA',
             states: null,
             newState: null,
+            newData: null,
             schools: null,
             univs: null,
             rests: null
         }
+        this.getStates = this.getStates.bind(this)
         this.getNewState = this.getNewState.bind(this)
         this.getData = this.getData.bind(this)
     }
 
     componentDidMount() {
+        this.getStates();
+        this.getData(this.state.initialState);
+    }
+
+    getStates = () => {
         axios.get(`/api/states`)
             .then(res => {
                 this.setState(
@@ -32,24 +38,7 @@ class Container extends Component {
             .catch(err => {
                 console.log(err)
             })
-        this.getData(this.state.initialState);
     }
-
-    // shouldComponentUpdate(prevState, nextState) {
-    //     // axios.get(`/api/states`)
-    //     //     .then(res => {
-    //     //         this.setState(
-    //     //             {
-    //     //                 states: res.data
-    //     //             }
-    //     //         )
-    //     //     })
-    //     //     .catch(err => {
-    //     //         console.log(err)
-    //     //     })
-    //     // this.getData(this.state.initialState);
-    //     // return false;
-    // }
 
     getData = val => {
         const st = _.isObject(val) ? val.value : val
