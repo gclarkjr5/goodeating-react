@@ -7,60 +7,33 @@ export class Maps extends Component {
         if (!this.props.loaded) {
             return <div>Loading...</div>
         }
-        const { univs, rests } = this.props;
-        const markers = _.isNull(univs) ? [] : _.map(univs, (x, i) =>
-            <Marker
-                key={i}
-                title={x[`school.name`]}
-                position={{ lat: x['location.lat'], lng: x['location.lon'] }}
-            />
-        );
-        const pos = _.isNull(rests) ?
-            <Map
-                google={this.props.google}
-                zoom={5}
-            >
-                {markers}
-            </Map>
-            :
-            <Map
+        const { universities, restaurants } = this.props;
+
+        if (universities && restaurants) {
+            const markers = _.map(universities, (x, i) =>
+                <Marker
+                    key={i}
+                    title={x[`school.name`]}
+                    position={{ lat: x['location.lat'], lng: x['location.lon'] }}
+                />)
+            return (<Map
                 google={this.props.google}
                 zoom={5}
             >
                 <HeatMap
-                    positions={rests}
+                    positions={restaurants}
                 />
                 {markers}
             </Map>
-
-        return (
-            <div>
-                {pos}
-            </div>
-        )
-
-
-
-
-        // if (pos.length > 0) {
-        //     return (
-        //         <Map
-        //             google={this.props.google}
-        //             zoom={5}
-        //         >
-        //             <HeatMap
-        //                 positions={pos}
-        //             />
-        //             {markers}
-
-        //         </Map>
-        //     )
-        // }
+            )
+        } else {
+            return <div>Still Loading...</div>
+        }
     }
 }
 
 export default GoogleApiWrapper({
     apiKey: ("AIzaSyAG9Ic0JYMUcE2h69XmBSbnzaWWw3vD12U"),
     version: '3',
-    libraries: ['places', 'visualization']
+    libraries: ['visualization']
 })(Maps)

@@ -17,11 +17,9 @@ class StateSelect extends Component {
             this.props.getData(v)
         }
 
-        let val = _.isNull(this.props.newState) ? this.props.initialState : this.props.newState.value
-
         return (
             <Select
-                value={val}
+                value={this.props.stateSelected}
                 options={options}
                 onChange={valueChange}
             />

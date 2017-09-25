@@ -1,21 +1,15 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+// import PropTypes from 'prop-types'
 import StateSelect from '../components/stateSelect';
 import Maps from '../components/gmaps';
-import axios from 'axios';
-import _ from 'lodash';
+import * as appActions from '../actions'
+
 
 class Container extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            initialState: 'CA',
-            states: null,
-            newState: null,
-            newData: null,
-            schools: null,
-            univs: null,
-            rests: null
-        }
         this.getStates = this.getStates.bind(this)
         this.getNewState = this.getNewState.bind(this)
         this.getData = this.getData.bind(this)
@@ -23,72 +17,40 @@ class Container extends Component {
 
     componentDidMount() {
         this.getStates();
-        this.getData(this.state.initialState);
+        this.getData(this.props.data.appData.stateSelected);
     }
 
     getStates = () => {
-        axios.get(`/api/states`)
-            .then(res => {
-                this.setState(
-                    {
-                        states: res.data
-                    }
-                )
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        this.props.action.getStates();
     }
 
     getData = val => {
-        const st = _.isObject(val) ? val.value : val
-        axios.post(`/api/yelp`, { selected: st })
-            .then(res => {
-                const pos = _.map(res.data.yelpData, x => {
-                    return {
-                        lat: _.round(x.lat, 6),
-                        lng: _.round(x.lng, 6)
-                    }
-                });
-                this.setState(
-                    {
-                        univs: res.data.uniData,
-                        rests: pos
-                    }
-                )
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        this.props.action.getData(val);
     }
 
     getNewState = val => {
-        this.setState(
-            {
-                newState: val
-            }
-        )
+        this.props.action.getNewState(val);
     }
 
     render() {
-        const { states, newState, initialState, univs, rests } = this.state
+        const { states, universities, restaurants } = this.props.data.appData
         const style = {
             width: '100vw',
             height: '100vh',
             position: 'relative'
         }
+
         return (
             <div>
                 <StateSelect
                     states={states}
-                    initialState={initialState}
+                    stateSelected={this.props.data.appData.stateSelected}
                     getData={this.getData}
                     getNewState={this.getNewState}
-                    newState={newState}
                 />
                 <Maps
-                    rests={rests}
-                    univs={univs}
+                    restaurants={restaurants}
+                    universities={universities}
                     style={style}
                 />
             </div>
@@ -96,6 +58,20 @@ class Container extends Component {
     }
 }
 
-export default Container;
+const mapStateToProps = state => {
+    return {
+        data: state
+    }
+}
 
+const mapDispatchToProps = dispatch => {
+    return {
+        action: bindActionCreators(appActions, dispatch)
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Container);
 
